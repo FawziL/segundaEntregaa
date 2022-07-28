@@ -7,72 +7,65 @@ admin.initializeApp({
 
 const db = admin.firestore();
 
-class ContenedorFirebase {
-  constructor(nombreColeccion) {
-    this.coleccion = db.collection(nombreColeccion);
+export class ContenedorFirebase {
+  constructor(collectionName){
+      this.collectionName = collectionName;
+      this.collection = db.collection(collectionName);
   }
-
-  async listar(id) {
-    const doc = await this.coleccion.doc(id).get();
-    const data = doc.data();
-    return { ...data, id };
-  }
-
-  async listarAll() {
-    try {
-      const doc = await this.coleccion.doc().get();
-      return JSON.parse(doc);
-    } catch (error) {
-      return [];
-    }
-  }
-
-  async guardar() {
-    try {
-    const produc = this.coleccion.doc();
-    await produc.create({nombre: "fawzi"})
-    } catch (error) {
-      throw new Error(`Error al guardar: ${error}`);
-    }
-  }
-/*
-  async actualizar(elem) {
-    const objs = await this.listarAll();
-    const index = objs.findIndex((o) => o.id == elem.id);
-    if (index == -1) {
-      throw new Error(`Error al actualizar: no se encontró el id ${id}`);
-    } else {
-      objs[index] = elem;
+  async getAll(){
       try {
-        await fs.writeFile(this.ruta, JSON.stringify(objs, null, 2));
+          const snapshot  = await this.collection.get();
+          const data = []
+          snapshot.forEach(doc => {
+              let obj = {}
+              obj = doc.data();
+              obj._id = doc.id
+              data.push(obj)
+          });
+          return {data};
       } catch (error) {
-        throw new Error(`Error al actualizar: ${error}`);
+          console.log(`error in getting ${this.collectionName}: ${error}`);
+          return {error: {message: `error in getting ${this.collectionName}`, status: 500}};
       }
-    }
   }
-
-  async borrar(id) {
-    const objs = await this.listarAll();
-    const index = objs.findIndex((o) => o.id == id);
-    if (index == -1) {
-      throw new Error(`Error al borrar: no se encontró el id ${id}`);
-    }
-
-    objs.splice(index, 1);
-    try {
-      await fs.writeFile(this.ruta, JSON.stringify(objs, null, 2));
-    } catch (error) {
-      throw new Error(`Error al borrar: ${error}`);
-    }
+  async getById(id){
+      try {
+          const doc = await this.collection.doc(id).get();
+          const data = doc.data();
+          data._id = id;
+          if (data) return {data};
+          return {error: {message: `no ${this.collectionName} with ID: ${id}`, status: 404}};
+      } catch (error) {
+          console.log(`error in getting ${this.collectionName}: ${error}`);
+          return {error: {message: `error in getting ${this.collectionName}`, status: 500}};
+      }
   }
-
-  async borrarAll() {
-    try {
-      await fs.writeFile(this.ruta, JSON.stringify([], null, 2));
-    } catch (error) {
-      throw new Error(`Error al borrar todo: ${error}`);
-    }
-  }*/
+  async add(data){
+      try {
+          data.timestamp = Date.now();
+          const res = await this.collection.add(data);
+          return {_id: res.id}
+      } catch (error) {
+          console.log(`error in adding ${this.collectionName}: ${error}`);
+          return {error: {message: `error in adding ${this.collectionName}`, status: 500}};
+      }
+  }
+  async updateOne(id, NewDataObj){
+      try {
+          const doc = this.collection.doc(id);
+          await doc.update(NewDataObj);
+      } catch (error) {
+          console.log(`error in updating ${this.collectionName}: ${error}`);
+          return {error: {message: `error in updating ${this.collectionName}`, status: 500}};
+      }
+  }
+  async deleteById(id){
+      try {
+          const doc = this.collection.doc(id);
+          await doc.delete();
+      } catch (error) {
+          console.log(`error in deleting ${this.collectionName}: ${error}`);
+          return {error: {message: `error in deleting ${this.collectionName}`, status: 500}};
+      }
+  }
 }
-
-export default ContenedorFirebase;
