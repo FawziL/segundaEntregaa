@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="index.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.7.7/handlebars.min.js"
+    integrity="sha512-RNLkV3d+aLtfcpEyFG8jRbnWHxUqVZozacROI4J2F1sTaDqo1dPQYs01OMi1t1w9Y2FdbSCDSQ2ZVdAC8bzgAg=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <title>Document</title>
+</head>
+<body>
+    <div class="form">
+        <h1>Ingresa el producto</h1>
+        <form action="/"  method="POST" id="form">
+            Nombre: <input type="text" name="name" id="inputName">
+            <br>
+            Precio: <input type="number" name="price" id="inputPrice">
+            <br>
+            Imagen: <input type="text" name="thumbnail" id="inputEmail">
+            <br>
+            <input type="submit" value="Subir" class="boton">
+        </form>
+
+    
+
+        <h3> Lista de Productos:</h3>
+        <div id="noProducts"></div>
+        
+        <table class="table">
+                <thead id="productosTablaHead">
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Precio</th>
+                        <th>Imagen</th>
+                    </tr>
+                </thead>
+                <tbody id="productosTabla" >  
+                </tbody> 
+        </table>
+    </div>
+
+    <div class="form">
+
+        <h1>Centro de mensajes</h1>
+
+        <form id="formMessage">
+            <input id="usernameInput" type="email" placeholder="ejemplo@gmail.com">
+            <hr>
+            <div id="messagesPool"></div>
+            <div>
+            <input id="messageInput" type="text" placeholder="Mensaje">
+            <input type="submit" value="Enviar"> 
+            </div>
+        </form>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="./main.js"></script>
+</body>
+</html>
