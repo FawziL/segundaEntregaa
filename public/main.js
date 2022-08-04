@@ -54,6 +54,12 @@ socket.on('client:price:thumbnail', productos=>{
 
 const formMessage = document.querySelector('#formMessage')
 const usernameInput = document.querySelector('#usernameInput')
+const nameInput = document.querySelector('#nameInput')
+const lastNameInput = document.querySelector('#lastNameInput')
+const ageInput = document.querySelector('#ageInput') 
+const nickInput = document.querySelector('#nickInput')
+const avatarInput = document.querySelector('#avatarInput')
+
 const messageInput = document.querySelector('#messageInput')
 const messagesPool = document.querySelector('#messagesPool')
 
@@ -65,10 +71,29 @@ const VenHora=tiempo.toLocaleTimeString('it-IT')
 
 function sendMessage() {
     try {
+        
         const email = usernameInput.value
         const message = messageInput.value
-        const tiempochat = `${fecha}, ${VenHora}`
-        socket.emit('client:message', { email, message, tiempochat })
+        const nombre = nameInput.value
+        const apellido = lastNameInput.value 
+        const edad = ageInput.value
+        const alias = nickInput.value
+        const avatar = avatarInput.value
+
+
+        mensajitos = { 
+            author: {
+                id: email, 
+                nombre: nombre, 
+                apellido: apellido, 
+                edad: edad, 
+                alias: alias,
+                avatar: avatar
+            },
+            text: message,
+        }
+        
+        socket.emit('client:message', {mensajitos})
     } catch(error) {
         console.log(`Hubo un error ${error}`)
     }
@@ -78,9 +103,9 @@ function renderMessages(messagesArray) {
     try {
         const html = messagesArray.map(messageInfo => {
             return(`<div>
-            <strong style="color: blue;" >${messageInfo.email}</strong>
+            <strong style="color: blue;" >${messageInfo.mensajitos.author.id}</strong>
             [<span style="color: brown;">${fecha}, ${VenHora}</span>]:
-            <em style="color: green;font-style: italic;">${messageInfo.message}</em> </div>`)
+            <em style="color: green;font-style: italic;">${messageInfo.mensajitos.text}</em> </div>`)
         }).join(" ");
 
         messagesPool.innerHTML = html
