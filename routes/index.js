@@ -8,6 +8,9 @@ const productApi = new productos()
 const MariaDBApi = new contenedor(MariaDB, 'productos')
 
 
+const {faker} = require('@faker-js/faker')
+
+
 /////////////////////
 routes.get('/api/productos', async function (req, res) {
     res.json(await MariaDBApi.getAll())
@@ -31,4 +34,27 @@ routes.delete('/api/productos/:id', async function (req, res) {
    res.json(await MariaDBApi.deleteById(req.params.id))
   })
 //////////////
+
+routes.get ('/api/productos-test', (req,res)=>{
+    
+  const response = [];
+
+  for (let i = 0; i < 5; i++) {
+    response.push({
+      title: faker.commerce.product(),
+      price: faker.commerce.price(),
+      thumbnail: faker.image.imageUrl(),
+    });
+  }
+  console.log(response)
+  res.json(response);
+})
+
+
+
+
+
+
+
+
 module.exports = routes
