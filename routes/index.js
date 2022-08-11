@@ -4,11 +4,11 @@ const routes = Router()
 const contenedor = require('../api/productosDB')
 const MariaDB = require('../MariaDB')
 
-const productApi = new productos()
+
 const MariaDBApi = new contenedor(MariaDB, 'productos')
 
+const {faker} = require("@faker-js/faker");
 
-const {faker} = require('@faker-js/faker')
 
 
 /////////////////////
@@ -35,12 +35,16 @@ routes.delete('/api/productos/:id', async function (req, res) {
   })
 //////////////
 
-routes.get ('/api/productos-test', (req,res)=>{
+
+
+
+routes.get('/api/productos-test', (req,res)=>{
     
   const response = [];
 
-  for (let i = 0; i < 5; i++) {
+  for (let i = 1; i <= 5; i++) {
     response.push({
+      id: i,
       title: faker.commerce.product(),
       price: faker.commerce.price(),
       thumbnail: faker.image.imageUrl(),
@@ -56,5 +60,6 @@ routes.get ('/api/productos-test', (req,res)=>{
 
 
 
-
 module.exports = routes
+
+

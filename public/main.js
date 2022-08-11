@@ -5,6 +5,17 @@ const inputName = document.getElementById('inputName');
 const inputPrice = document.getElementById('inputPrice');
 const inputEmail = document.getElementById('inputEmail');
 
+let welcome = document.querySelector("#welcome").innerHTML = "hola";//`Hasta luego ${value}`;
+
+const logout = document.querySelector("#desloguear")
+
+logout.addEventListener('click', ()=>{
+    console.log("hola")
+    location.href = '/logout'
+});
+
+
+
 function sendProducts (){
     try {
         const title = inputName.value;
@@ -121,3 +132,4 @@ formMessage.addEventListener('submit', event => {
 })
 
 socket.on('server:message', renderMessages);
+
