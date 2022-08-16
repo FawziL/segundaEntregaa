@@ -5,12 +5,12 @@ const inputName = document.getElementById('inputName');
 const inputPrice = document.getElementById('inputPrice');
 const inputEmail = document.getElementById('inputEmail');
 
-let welcome = document.querySelector("#welcome").innerHTML = "hola";//`Hasta luego ${value}`;
+
 
 const logout = document.querySelector("#desloguear")
 
 logout.addEventListener('click', ()=>{
-    console.log("hola")
+    console.log("bye")
     location.href = '/logout'
 });
 

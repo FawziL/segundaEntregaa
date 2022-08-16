@@ -34,53 +34,9 @@ app.use(
 
 
 app.use(express.static(`${__dirname}/public`));
-
-function auth(req, res, next){
-    if(req.session.username){
-        next();
-    }else{
-        res.redirect("/login");
-    }
-}
-function loginMiddleware(req, res, next) {
-    if (req.session.username) {
-      res.redirect("/");
-    } else {
-      next();
-    }
-  }
-app.get("/" , auth,(req, res) => {
-    console.log("Hola");
-    res.sendFile(path.join(__dirname, "/public/home.html"));
-  });
-app.get("/login",loginMiddleware, (req, res) =>{
-    res.sendFile(path.join(__dirname, "./public/login.html"))
-})
-app.get("/api/login", async (req, res) => {
-    try {
-      console.log(req.query.username);
-      req.session.username = req.query.username;
-  
-      res.redirect("/");
-    } catch (err) {
-      res.json({ error: true, message: err });
-    }
-  });
+app.use("/", rutas);
 
 
-  app.get('/logout', (req, res) => {
-    if (req.session.username) {
-        req.session.destroy(err => {
-            if (!err) {
-                res.sendFile(path.join(__dirname, "./public/logout.html"))
-            } else {
-                res.redirect('/')
-            }
-        })
-    } else {
-        res.redirect('/')
-    }
-})
 ////////////////////////////////////////////
 const serverExpress = app.listen(puerto, (error)=>{
     if(error){
