@@ -71,7 +71,6 @@ function loginMiddleware(req, res, next) {
   }
 }
 routes.get("/" , auth,(req, res) => {
-  console.log("Hola");
   res.sendFile(path.join(__dirname, "../public/home.html"));
 });
 routes.get("/login",loginMiddleware, (req, res) =>{
@@ -87,7 +86,9 @@ routes.get("/api/login", async (req, res) => {
     res.json({ error: true, message: err });
   }
 });
-
+routes.get('/data',(req, res)=>{
+  res.json({ user: req.session.username})
+})
 routes.get('/logout', (req, res) => {
   if (req.session.username) {
       req.session.destroy(err => {

@@ -14,6 +14,21 @@ logout.addEventListener('click', ()=>{
     location.href = '/logout'
 });
 
+async function insertUser(){
+    let userName
+    fetch('/data')
+     .then(user=>user.json())
+     .then(json=>userName= json)
+
+    const response = await fetch('/logIn.hbs')
+    const logInPlantilla= await response.text()
+    const template = Handlebars.compile(logInPlantilla)
+    const filled = template(userName) 
+    document.querySelector('#welcome').innerHTML += filled
+}
+
+ insertUser()
+ 
 
 
 function sendProducts (){

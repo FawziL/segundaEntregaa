@@ -36,7 +36,9 @@ app.use(
 app.use(express.static(`${__dirname}/public`));
 app.use("/", rutas);
 
-
+app.set('view engine', 'ejs')
+app.set('views', './views')
+ 
 ////////////////////////////////////////////
 const serverExpress = app.listen(puerto, (error)=>{
     if(error){
