@@ -80,6 +80,7 @@ routes.get("/api/login", async (req, res) => {
   try {
     console.log(req.query.username);
     req.session.username = req.query.username;
+    req.session.password = req.query.password;
 
     res.redirect("/");
   } catch (err) {
@@ -87,7 +88,7 @@ routes.get("/api/login", async (req, res) => {
   }
 });
 routes.get('/data',(req, res)=>{
-  res.json({ user: req.session.username})
+  res.json({ password: req.session.password, user: req.session.username })
 })
 routes.get('/logout', (req, res) => {
   if (req.session.username) {
@@ -102,8 +103,9 @@ routes.get('/logout', (req, res) => {
       res.redirect('/')
   }
 })
-
-
+routes.get("/register", (req, res) =>{
+  res.sendFile(path.join(__dirname, "../public/register.html"))
+})
 
 
 

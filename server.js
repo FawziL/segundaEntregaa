@@ -5,10 +5,12 @@ const puerto = 8080
 const rutas = require('./routes/index')
 const path = require('path')
 const fs = require('fs')
+const mongoose = require("mongoose")
 
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
+mongoose.connect('mongodb+srv://Fawzi:Fawzi123@cluster0.5qcwzcb.mongodb.net/?retryWrites=true&w=majority');
 
 const cookieParser = require("cookie-parser")
 const session = require("express-session")
@@ -36,8 +38,6 @@ app.use(
 app.use(express.static(`${__dirname}/public`));
 app.use("/", rutas);
 
-app.set('view engine', 'ejs')
-app.set('views', './views')
  
 ////////////////////////////////////////////
 const serverExpress = app.listen(puerto, (error)=>{
