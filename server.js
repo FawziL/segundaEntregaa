@@ -2,15 +2,19 @@ const express = require('express')
 const app = express()
 const {Server: IOServer} = require('socket.io')
 const puerto = 8080
-const rutas = require('./routes/index')
+const passport = require("passport")
+const initPassport = require( './passport/init.js')
+const rutas = require( "./routes/index.js")(passport);
 const path = require('path')
 const fs = require('fs')
-const mongoose = require("mongoose")
+const mongoose = require( "mongoose")
+
+
 
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
-mongoose.connect('mongodb+srv://Fawzi:Fawzi123@cluster0.5qcwzcb.mongodb.net/?retryWrites=true&w=majority');
+mongoose.connect("mongodb+srv://Fawzi:Fawzi123@cluster0.5qcwzcb.mongodb.net/?retryWrites=true&w=majority");
 
 const cookieParser = require("cookie-parser")
 const session = require("express-session")
@@ -36,7 +40,6 @@ app.use(
 
 
 app.use(express.static(`${__dirname}/public`));
-app.use("/", rutas);
 
  
 ////////////////////////////////////////////
@@ -47,13 +50,24 @@ const serverExpress = app.listen(puerto, (error)=>{
         console.log(`Servidor escuchando: 8080`)
       }
 })
+////////////////////////////////////////////
 
+//Inicializo PASSPORT
+app.use(passport.initialize());
+app.use(passport.session());
+initPassport(passport);
+app.use("/", rutas);
+
+
+
+
+
+
+////////////////////////////////////////////
 const products = []
 const messages = []
 
-
 ////GUARDAR CHAT EN EL ARCHIVO////////
-
 async function escribir(){
     try{
         await fs.promises.writeFile(path.join(__dirname,'/chat'), JSON.stringify(messages))
@@ -64,8 +78,7 @@ async function escribir(){
     }
 
 }
-
-
+//// SOCKET IO  ////////
 const io = new IOServer(serverExpress)
 io.on('connection', socket =>{
     console.log(`Se conectó un usuario ${socket.id}`) 

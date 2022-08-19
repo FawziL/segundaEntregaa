@@ -55,7 +55,8 @@ routes.get('/api/productos-test', (req,res)=>{
   res.json(response);
 })
 
-////////////////////////////////////
+/////////////////////////////////////
+/*
 function auth(req, res, next){
   if(req.session.username){
       next();
@@ -106,9 +107,84 @@ routes.get('/logout', (req, res) => {
 routes.get("/register", (req, res) =>{
   res.sendFile(path.join(__dirname, "../public/register.html"))
 })
+*/
+  //INDEX
+module.exports = function(passport){
 
+    //INDEX
+    routes.get('/',(req,res)=>{
+      res.sendFile(path.join(__dirname, ".././public/home.html"));
+    }) 
+    ////////          LOGIN         ////////
+    //GET LOGIN
+    routes.get('/login',(req, res)=>{
+      if(req.isAuthenticated()){
+        // console.log('estoy logueadooooo')
+        let user= req.user
+        res.redirect('/')
+      }else{
+        // console.log('usuario no logueado')
+        res.sendFile(path.join(__dirname, ".././public/login.html")); //aca si podría un res.render
+      }
+      
+    })
+  
+    routes.get('/data',(req, res)=>{
+      res.json({user: req.session.username})
+    })
+  
+    //POST LOGIN
+    routes.post('/login',passport.authenticate('login',
+      {failureRedirect: '/fail-login',failureMessage: true}),
+      (req, res)=>{
+        // console.log('req- metodo post-login',req.body)
+        let user= req.username
+        res.redirect('/')
+      }
+    )
+    //GET FAIL LOGIN
+    routes.get('/fail-login',(req, res)=>{
+      // console.log('req.session.messages',req.session.messages)
+      res.sendFile(path.join(__dirname, ".././public/faillogin.html"));
+    })
+  
+    ///////           SIGNUP            ///////////////////
+    //GET REGISTRATION
+    routes.get('/register',(req, res)=>{
+      res.sendFile(path.join(__dirname, ".././public/register.html")); 
+    })
+    //POST REGISTRATION
+    routes.post('/register',passport.authenticate('register',
+      { failureRedirect: '/fail-register',failureMessage: true}),
+      (req, res)=>{
+        // console.log('req- metodo post-login',req.body)
+        let user= req.user
+        res.redirect('/')
+      }
+    )
+    ///FAIL SIGNUP
+    routes.get('/fail-register',(req, res)=>{
+      res.sendFile(path.join(__dirname, ".././public/failregister.html"));
+    })
+  
+    //LOGOUT
+    routes.get('/logout',  function(req, res, next) {
+      let user= req.user.username
+      // console.log('req.user',req.user)
+      req.logout(function(err) {   //METODO DE PASSPORT
+        if (err)  return next(err); 
+        res.send(`<h1>Hasta luego ${user}</h1>
+          <script type="text/javascript">
+          setTimeout(function(){ location.href = '/login'},2000)
+          </script>`
+        )
+      })
+    })
+  
+    return routes;
+  
+  }
 
-
-module.exports = routes
+//module.exports = routes
 
 
