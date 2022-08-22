@@ -112,10 +112,13 @@ routes.get("/register", (req, res) =>{
 module.exports = function(passport){
 
 routes.get('/',(req,res)=>{
-  res.sendFile(path.join(__dirname, ".././public/home.html"));
-}) 
+  if(req.isAuthenticated()){
+    res.sendFile(path.join(__dirname, ".././public/home.html"))
+    }else{
+    res.sendFile(path.join(__dirname, ".././public/login.html")); 
+    }    
+})
     ////////          LOGIN         ////////
-
 routes.get('/login',(req, res)=>{
   if(req.isAuthenticated()){
 
@@ -127,14 +130,13 @@ routes.get('/login',(req, res)=>{
 })
   
 routes.get('/data',(req, res)=>{
-  res.json({user: req.session.username})
+  res.json({username: req.user.username})
 })
   
     //POST LOGIN
 routes.post('/login',passport.authenticate('login',
   {failureRedirect: '/fail-login',failureMessage: true}),
   (req, res)=>{
-      let user= req.username
       res.redirect('/')
     }
 )
@@ -147,23 +149,20 @@ routes.get('/fail-login',(req, res)=>{
     //GET REGISTRATION
 routes.get('/signup',(req, res)=>{
     res.sendFile(path.join(__dirname, ".././public/register.html")); 
-  })
+})
     //POST REGISTRATION
 routes.post('/signup',passport.authenticate('signup',{ failureRedirect: '/fail-signup',failureMessage: true}),(req, res)=>{
-      console.log('req- metodo post-login',req.body)
-      let user= req.user
-      res.redirect('/')
+      console.log('req- metodo post-login',req.body)   
+      res.redirect('/login') 
 })
     ///FAIL SIGNUP
 routes.get('/fail-signup',(req, res)=>{
   res.sendFile(path.join(__dirname, ".././public/failsignup.html"));
 })
-  
     //LOGOUT
 routes.get('/logout',  function(req, res, next) {
       let user= req.user.username
-      // console.log('req.user',req.user)
-  req.logout(function(err) {   //METODO DE PASSPORT
+  req.logout(function(err) {  
         if (err)  return next(err); 
     res.send(`<h1>Hasta luego ${user}</h1>
           <script type="text/javascript">
@@ -172,9 +171,7 @@ routes.get('/logout',  function(req, res, next) {
         )
   })
 })
-  
-    return routes;
-  
+return routes;
 }
 
 

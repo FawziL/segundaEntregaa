@@ -27,3 +27,6 @@ h4{
     margin: 0px;
     text-align: center;
 }
+button{
+    border-radius: 5px;
+}
