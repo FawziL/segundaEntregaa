@@ -111,80 +111,71 @@ routes.get("/register", (req, res) =>{
   //INDEX
 module.exports = function(passport){
 
-    //INDEX
-    routes.get('/',(req,res)=>{
-      res.sendFile(path.join(__dirname, ".././public/home.html"));
-    }) 
+routes.get('/',(req,res)=>{
+  res.sendFile(path.join(__dirname, ".././public/home.html"));
+}) 
     ////////          LOGIN         ////////
-    //GET LOGIN
-    routes.get('/login',(req, res)=>{
-      if(req.isAuthenticated()){
-        // console.log('estoy logueadooooo')
-        let user= req.user
-        res.redirect('/')
-      }else{
-        // console.log('usuario no logueado')
-        res.sendFile(path.join(__dirname, ".././public/login.html")); //aca si podría un res.render
-      }
+
+routes.get('/login',(req, res)=>{
+  if(req.isAuthenticated()){
+
+  res.redirect('/')
+  }else{
+  res.sendFile(path.join(__dirname, ".././public/login.html")); 
+  }
       
-    })
+})
   
-    routes.get('/data',(req, res)=>{
-      res.json({user: req.session.username})
-    })
+routes.get('/data',(req, res)=>{
+  res.json({user: req.session.username})
+})
   
     //POST LOGIN
-    routes.post('/login',passport.authenticate('login',
-      {failureRedirect: '/fail-login',failureMessage: true}),
-      (req, res)=>{
-        // console.log('req- metodo post-login',req.body)
-        let user= req.username
-        res.redirect('/')
-      }
-    )
+routes.post('/login',passport.authenticate('login',
+  {failureRedirect: '/fail-login',failureMessage: true}),
+  (req, res)=>{
+      let user= req.username
+      res.redirect('/')
+    }
+)
     //GET FAIL LOGIN
-    routes.get('/fail-login',(req, res)=>{
-      // console.log('req.session.messages',req.session.messages)
-      res.sendFile(path.join(__dirname, ".././public/faillogin.html"));
-    })
+routes.get('/fail-login',(req, res)=>{
+  res.sendFile(path.join(__dirname, ".././public/faillogin.html"));
+})
   
     ///////           SIGNUP            ///////////////////
     //GET REGISTRATION
-    routes.get('/register',(req, res)=>{
-      res.sendFile(path.join(__dirname, ".././public/register.html")); 
-    })
+routes.get('/signup',(req, res)=>{
+    res.sendFile(path.join(__dirname, ".././public/register.html")); 
+  })
     //POST REGISTRATION
-    routes.post('/register',passport.authenticate('register',
-      { failureRedirect: '/fail-register',failureMessage: true}),
-      (req, res)=>{
-        // console.log('req- metodo post-login',req.body)
-        let user= req.user
-        res.redirect('/')
-      }
-    )
+routes.post('/signup',passport.authenticate('signup',{ failureRedirect: '/fail-signup',failureMessage: true}),(req, res)=>{
+      console.log('req- metodo post-login',req.body)
+      let user= req.user
+      res.redirect('/')
+})
     ///FAIL SIGNUP
-    routes.get('/fail-register',(req, res)=>{
-      res.sendFile(path.join(__dirname, ".././public/failregister.html"));
-    })
+routes.get('/fail-signup',(req, res)=>{
+  res.sendFile(path.join(__dirname, ".././public/failsignup.html"));
+})
   
     //LOGOUT
-    routes.get('/logout',  function(req, res, next) {
+routes.get('/logout',  function(req, res, next) {
       let user= req.user.username
       // console.log('req.user',req.user)
-      req.logout(function(err) {   //METODO DE PASSPORT
+  req.logout(function(err) {   //METODO DE PASSPORT
         if (err)  return next(err); 
-        res.send(`<h1>Hasta luego ${user}</h1>
+    res.send(`<h1>Hasta luego ${user}</h1>
           <script type="text/javascript">
           setTimeout(function(){ location.href = '/login'},2000)
           </script>`
         )
-      })
-    })
+  })
+})
   
     return routes;
   
-  }
+}
 
-//module.exports = routes
 
 

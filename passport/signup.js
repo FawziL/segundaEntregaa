@@ -10,12 +10,19 @@ module.exports = function (passport){
         },
         async (req, username, password, done)=> {
             try {
+                // find a user in Mongo with provided username
                 const existingUser = User.findOne({ 'username' :  username }, 
                     (err, user)=> {
+                    // In case of any error, return using the done method
                         if (err){
+                            // console.log('Error in SignUp: ', err);
                             return done(err);
                         }
+                        // already exists
                         if (user) {
+                            // console.log('User already exists with username: ', username);
+                            // console.log('user', user)
+                            // console.log('tuser',typeof user)
                             return done(null, false);
                         } else {
                             const newUser = {

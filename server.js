@@ -13,7 +13,6 @@ const mongoose = require( "mongoose")
 
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
-
 mongoose.connect("mongodb+srv://Fawzi:Fawzi123@cluster0.5qcwzcb.mongodb.net/?retryWrites=true&w=majority");
 
 const cookieParser = require("cookie-parser")

@@ -10,14 +10,23 @@
 <body>
     <div class="form"> 
         <h1>Registro de Usuario</h1>
-        <form id="registerForm" action="/register"  method="post">
+        <form id="registerForm" action="/signup"  method="post">
             <p>Ingrese su nombre:</p>
             <input type="text" id="registerUser">
-            <input type="text" id="passwordUser">
+            <input type="password" id="passwordUser">
             <input type="submit" class="boton">   
         </form>
-        <button id="Login">Login</button>
+        <button id="Login" onclick="goLogin()">Login</button>
     </div>
-    <script src="./register.js"></script>
+
+    <script>
+        function redireccionar(pagina) {
+        location.href = pagina;
+        }
+
+        function goLogin() {
+        redireccionar('/login');
+        };
+    </script>
 </body>
 </html>

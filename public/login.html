@@ -10,14 +10,25 @@
 <body>
     <div class="form"> 
         <h1>Login de Usuario</h1>
-        <form id="loginForm">
+        <form id="formLogIn" action="/login"  method="post">
             <p>Ingrese su nombre:</p>
             <input type="text" id="loginUser">
             <input type="password" id="loginPasswordUser">
             <input type="submit" class="boton">   
         </form>
-        <button id="Register">Register</button>
+        <button id="Register" onclick="goLogin()">Register</button>
     </div>
-    <script src="./login.js"></script>
+</form>
+
+
+    <script>
+        function redireccionar(pagina) {
+        location.href = pagina;
+        }
+
+        function goLogin() {
+        redireccionar('/signup');
+        };
+    </script>
 </body>
 </html>
