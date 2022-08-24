@@ -2,15 +2,14 @@ let LocalStrategy   = require('passport-local').Strategy;
 let User = require('../models/user');
 let bCrypt = require('bcrypt');
 
-//Estrategia de Login/acceso
 module.exports= function (passport){
 
 	passport.use('login', new LocalStrategy({
-        passReqToCallback : true //nos permite acceder al objeto request
+        passReqToCallback : true 
         },
         async (req, username, password, done) => {
         try { 
-            const user = await User.findOne({ 'username' :  username });
+            const user = await User.findOne({ 'email' :  username });
             console.log("se ha encontrado al usuario")
 
             if (!user || !isValidPassword(user, password)) {

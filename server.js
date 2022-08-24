@@ -25,7 +25,6 @@ app.use(
     session({
         store: MongoStore.create({
             mongoUrl: 'mongodb+srv://Fawzi:Fawzi123@cluster0.5qcwzcb.mongodb.net/?retryWrites=true&w=majority',
-
         }),
         secret: "coderhouse",
         resave: false,
