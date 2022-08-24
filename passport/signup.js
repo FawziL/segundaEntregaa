@@ -8,28 +8,20 @@ module.exports = function (passport){
             passReqToCallback : true 
         },
         async (req, email, password, done)=> {
-            try {
-                const existingUser = User.findOne({ 'email' :  email }, 
-                    (err, user)=> {
-                        if (err){
-                            return done(err);
-                        }
-                        if (user) {
-                            return done(null, false);
-                        } else {
+            try {	
+                const existingUser = await User.findOne({ 'email': email })
+                    if (existingUser) return done(null, false, 'Ya existe el usuario')
                             const newUser = {
                                 email: req.body.username,
                                 password: hashPassword(password),
-                                
+                 
                             };
-                            const createdUser = User.create(newUser);
+                            const createdUser = await User.create(newUser);
                             return done(null, createdUser);
-                        }
-                }).clone()    
-            } catch (err) {
-                console.log(err);
-                done(err);
-            }
+                            } catch (err) {
+                                console.log(err);
+                                done(err);
+                            }
         
         })
             
@@ -41,3 +33,4 @@ module.exports = function (passport){
     }  
 
 }
+
