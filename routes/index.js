@@ -55,64 +55,47 @@ routes.get('/api/productos-test', (req,res)=>{
   res.json(response);
 })
 */
-/////////////////////////////////////
 
+
+const isAuth = require ('../middlewares/isAuth.js');
 module.exports = function(passport){
 
-routes.get('/',(req,res)=>{
-  if(req.isAuthenticated()){
-    res.sendFile(path.join(__dirname, ".././public/home.html"))
-    }else{
-    res.sendFile(path.join(__dirname, ".././public/login.html")); 
-    }    
+routes.get('/', isAuth,(req,res)=>{
+  res.sendFile(path.join(__dirname, ".././public/home.html"))
 })
-    ////////          LOGIN         ////////
 routes.get('/login',(req, res)=>{
   if(req.isAuthenticated()){
-
   res.redirect('/')
   }else{
   res.sendFile(path.join(__dirname, ".././public/login.html")); 
-  }
-      
+  }    
 })
-  
-routes.get('/data',(req, res)=>{
+routes.get('/data', isAuth, (req, res)=>{
   res.json({email: req.user.email})
 })
-  
-    //POST LOGIN
 routes.post('/login',passport.authenticate('login',
   {failureRedirect: '/fail-login',failureMessage: true}),
   (req, res)=>{
       res.redirect('/')
-    }
+  }
 )
-    //GET FAIL LOGIN
 routes.get('/fail-login',(req, res)=>{
   res.sendFile(path.join(__dirname, ".././public/faillogin.html"));
 })
-  
-    ///////           SIGNUP            ///////////////////
-    //GET REGISTRATION
 routes.get('/signup',(req, res)=>{
     res.sendFile(path.join(__dirname, ".././public/register.html")); 
 })
-    //POST REGISTRATION
 routes.post('/signup',passport.authenticate('register',{ failureRedirect: '/fail-signup',failureMessage: true}),(req, res)=>{
-      console.log('req- metodo post-register',req.body)   
-      res.redirect('/login') 
+  res.sendFile(path.join(__dirname, ".././public/login.html"));  
 })
-    ///FAIL SIGNUP
 routes.get('/fail-signup',(req, res)=>{
   res.sendFile(path.join(__dirname, ".././public/failsignup.html"));
 })
-    //LOGOUT
-routes.get('/logout',  function(req, res, next) {
-      let user= req.user.email
-  req.logout(function(err) {  
-        if (err)  return next(err); 
-    res.send(`<h1>Hasta luego ${user}</h1>
+routes.get('/logout', isAuth,   function(req, res, next) {
+  let user= req.user.email
+  req.logout(function(err){  
+    if (err)  return next(err); 
+  res.send(`<h1>Hasta luego ${user}</h1>
           <script type="text/javascript">
           setTimeout(function(){ location.href = '/login'},2000)
           </script>`

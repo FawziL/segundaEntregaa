@@ -7,9 +7,9 @@ module.exports= function (passport){
 	passport.use('login', new LocalStrategy({
         passReqToCallback : true 
         },
-        async (req, username, password, done) => {
+        async (req, email, password, done) => {
         try { 
-            const user = await User.findOne({ 'email' :  username });
+            const user = await User.findOne({ 'email' :  email });
             console.log("se ha encontrado al usuario")
 
             if (!user || !isValidPassword(user, password)) {
