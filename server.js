@@ -1,19 +1,19 @@
 const express = require('express')
 const app = express()
 const {Server: IOServer} = require('socket.io')
-const puerto = 8080
+//const puerto = 8080
 const passport = require("passport")
 const initPassport = require( './passport/init.js')
 const rutas = require( "./routes/index.js")(passport);
 const path = require('path')
 const fs = require('fs')
 const mongoose = require( "mongoose")
-
-
+require("dotenv").config()
+const port = require('./minimist')
 
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
-mongoose.connect("mongodb+srv://Fawzi:Fawzi123@cluster0.5qcwzcb.mongodb.net/?retryWrites=true&w=majority");
+mongoose.connect(process.env.MONGO_URL);
 
 const cookieParser = require("cookie-parser")
 const session = require("express-session")
@@ -41,11 +41,11 @@ app.use(express.static(`${__dirname}/public`));
 
  
 ////////////////////////////////////////////
-const serverExpress = app.listen(puerto, (error)=>{
+const serverExpress = app.listen(port, (error)=>{
     if(error){
         console.log(`Hubo un error: ${error}`)
     }else{
-        console.log(`Servidor escuchando: 8080`)
+        console.log(`Servidor escuchando: ${port}`)
       }
 })
 ////////////////////////////////////////////
@@ -56,10 +56,23 @@ app.use(passport.session());
 initPassport(passport);
 app.use("/", rutas);
 
-
-
-
-
+////////////////////////////////NUMEROSRAMDOM
+function generateRandomNumber() {
+    return Math.floor(Math.random() * (1000 - 1 + 1) + 1);
+  }
+  
+  
+app.get("/api/randoms",(req, res) => {
+    const numeros = [];
+    const cantidad = req.query.cant ? Number(req.query.cant) : 100;
+    for(i=0; cantidad>i; i++){
+      numeros.push(generateRandomNumber())
+    }
+    res.json(numeros)
+  });
+  
+  
+  
 
 ////////////////////////////////////////////
 const products = []
