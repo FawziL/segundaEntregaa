@@ -56,23 +56,6 @@ app.use(passport.session());
 initPassport(passport);
 app.use("/", rutas);
 
-////////////////////////////////NUMEROSRAMDOM
-function generateRandomNumber() {
-    return Math.floor(Math.random() * (1000 - 1 + 1) + 1);
-  }
-  
-  
-app.get("/api/randoms",(req, res) => {
-    const numeros = [];
-    const cantidad = req.query.cant ? Number(req.query.cant) : 100;
-    for(i=0; cantidad>i; i++){
-      numeros.push(generateRandomNumber())
-    }
-    res.json(numeros)
-  });
-  
-  
-  
 
 ////////////////////////////////////////////
 const products = []

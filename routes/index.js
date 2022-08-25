@@ -56,7 +56,7 @@ routes.get('/api/productos-test', (req,res)=>{
 })
 */
 
-
+const { fork } = require("child_process");
 const isAuth = require ('../middlewares/isAuth.js');
 module.exports = function(passport){
 
@@ -102,6 +102,13 @@ routes.get('/logout', isAuth,   function(req, res, next) {
         )
   })
 })
+routes.get("/api/randoms",(req, res) => { 
+  const forked = fork("child.js");
+  forked.send(req.query.cant ? Number(req.query.cant) : 100000000)
+  forked.on('message', (msg) => {
+  res.json(msg);
+  });
+});
 return routes;
 }
 
