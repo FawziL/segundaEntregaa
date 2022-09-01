@@ -63,8 +63,9 @@ if (isCluster && cluster.isPrimary) {
   
    });
   } 
-
-app.use('/', rutas) 
+  app.get('/api/randoms/datos'),(req, res)=>{
+    res.send(`Server2-2 - PORT: ${port}`)
+  }
     const connectedServer = app.listen(port, () => {
       console.log(`Servidor http escuchando en el puerto ${connectedServer.address().port} - PID ${process.pid}`)
   })
