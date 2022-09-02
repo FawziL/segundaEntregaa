@@ -1,0 +1,33 @@
+*Ejecutar el servidor (modos FORK y CLUSTER) con nodemon verificando el número de procesos tomados por node.
+
+Rutas:
+
+  npx nodemon server.js -- 8081 fork
+  npx nodemon server.js -- 8081 cluster
+
+*Ejecutar el servidor (con los parámetros adecuados) utilizando Forever, verificando su correcta operación. Listar los procesos por Forever y por sistema operativo.
+
+Rutas:
+
+  forever start server.js
+  forever list 
+
+
+*Ejecutar el servidor (con los parámetros adecuados: modo FORK) utilizando PM2 en sus modos modo fork y cluster. Listar los procesos por PM2 y por sistema operativo.
+
+Rutas:
+
+  pm2 status
+  fork : pm2 start server.js
+  cluster : pm2 start server2-1.js -i max -- 8082
+  Listar los procesos : pm2 status
+
+*Incluir también un pequeño documento en donde se detallen los comandos que deben ejecutarse por línea de comandos y los argumentos que deben enviarse para levantar todas las instancias de servidores de modo que soporten la configuración detallada en los puntos anteriores.
+
+Rutas:
+
+    pm2 start ./server.js -- 8080 cluster
+    pm2 start ./server2-1.js -- 8081 cluster
+    pm2 start ./server2-2.js -- 8082 cluster
+    pm2 start ./server2-3.js -- 8083 cluster
+    pm2 start ./server2-4.js -- 8084 cluster
