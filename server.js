@@ -1,7 +1,6 @@
 const express = require('express')
 const app = express()
 const {Server: IOServer} = require('socket.io')
-//const puerto = 8080
 const passport = require("passport")
 const initPassport = require( './passport/init.js')
 const rutas = require( "./routes/index.js")(passport);
@@ -9,11 +8,13 @@ const path = require('path')
 const fs = require('fs')
 const mongoose = require( "mongoose")
 require("dotenv").config()
-const port = require('./minimist')
+const config = require('./config/config')
+const mongo = config.mongodb
+const port = config.port
 
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
-mongoose.connect(process.env.MONGO_URL);
+mongoose.connect(mongo);
 
 const cookieParser = require("cookie-parser")
 const session = require("express-session")
@@ -24,7 +25,7 @@ app.use(cookieParser());
 app.use(
     session({
         store: MongoStore.create({
-            mongoUrl: 'mongodb+srv://Fawzi:Fawzi123@cluster0.5qcwzcb.mongodb.net/?retryWrites=true&w=majority',
+            mongoUrl: mongo,
         }),
         secret: "coderhouse",
         resave: false,
