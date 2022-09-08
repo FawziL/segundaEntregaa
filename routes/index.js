@@ -56,8 +56,12 @@ routes.get('/api/productos-test', (req,res)=>{
 })
 */
 
-const { fork } = require("child_process");
+//const { fork } = require("child_process");
 const isAuth = require ('../middlewares/isAuth.js');
+const util = require("util");
+const compression = require ("compression");
+const logger = require ("../logger.js");
+
 module.exports = function(passport){
 
 routes.get('/', isAuth,(req,res)=>{
@@ -102,14 +106,35 @@ routes.get('/logout', isAuth,   function(req, res, next) {
         )
   })
 })
-routes.get("/api/randoms",(req, res) => { 
+/*routes.get("/api/randoms",(req, res) => { 
   const forked = fork("child.js");
   forked.send(req.query.cant ? Number(req.query.cant) : 100000000)
   forked.on('message', (msg) => {
   res.json(msg);
   });
+});*/
+
+routes.get('/info',compression(), (req,res)=>{util
+  res.json(
+  `Titulo del proceso: ${process.title}
+  Sistema operativo: ${process.platform}
+  Version de Node: ${process.version}
+  Memoria total reservada: ${util.inspect(process.memoryUsage(), {
+    showHidden: false,
+    depth: null,
+    colors: true})}
+  Path de ejecución: ${util.inspect(process.execPath)}
+  Process id: ${process.pid}    
+  Carpeta del proyecto: ${process.cwd()}
+  Procesadores presentes: ${process.pid}`
+)});
+routes.get("*", (req, res) => {
+  const { url, method } = req;
+  logger.warn(`Ruta ${method} ${url} no implementada`);
+  res.send(`Ruta ${method} ${url} no está implementada`);
 });
+
+
 return routes;
 }
-
 

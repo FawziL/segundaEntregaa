@@ -11,6 +11,7 @@ require("dotenv").config()
 const config = require('./config/config')
 const mongo = config.mongodb
 const port = config.port
+const logger = require ("./logger.js");
 
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
@@ -46,6 +47,7 @@ const serverExpress = app.listen(port, (error)=>{
     if(error){
         console.log(`Hubo un error: ${error}`)
     }else{
+        logger.info(`Servidor http escuchando en el puerto ${serverExpress.address().port} - PID ${process.pid}`)
         console.log(`Servidor escuchando: ${port}`)
       }
 })
