@@ -1,6 +1,9 @@
 const express = require('express')
 const app = express()
-const {Server: IOServer} = require('socket.io')
+const { Server: HttpServer } = require('http')
+const { Server: IOServer } = require('socket.io')
+const httpServer = new HttpServer(app)
+const io = new IOServer(httpServer)
 const passport = require("passport")
 const initPassport = require( './passport/init.js')
 const rutas = require( "./routes/index.js")(passport);
@@ -8,19 +11,20 @@ const path = require('path')
 const fs = require('fs')
 const mongoose = require( "mongoose")
 require("dotenv").config()
-//const port = require('./minimist')
 const os = require("os");
 const cluster = require("cluster");
 const cpus = os.cpus();
-const isCluster = process.argv[3] == "cluster";
-const port = Number(process.argv[2]) || 8080;
 const { fork } = require("child_process");
-
-
+const config = require('./config.js');
+const mongo = config.mongodb
+const port = config.port
+const modo = config.modo
+console.log(modo)
+const isCluster = modo == "cluster";
 
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
-mongoose.connect(process.env.MONGO_URL);
+mongoose.connect(mongo);
 
 const cookieParser = require("cookie-parser")
 const session = require("express-session")
@@ -31,7 +35,7 @@ app.use(cookieParser());
 app.use(
     session({
         store: MongoStore.create({
-            mongoUrl: 'mongodb+srv://Fawzi:Fawzi123@cluster0.5qcwzcb.mongodb.net/?retryWrites=true&w=majority',
+            mongoUrl: mongo,
         }),
         secret: "coderhouse",
         resave: false,
@@ -62,15 +66,16 @@ if (isCluster && cluster.isPrimary) {
     cluster.fork();
   
    });
-  } 
-  app.get('/api/randoms/datos'),(req, res)=>{
-    res.send(`Server2-4 - PORT: ${port}`)
-  }
-    const connectedServer = app.listen(port, () => {
+  }  else{
+    app.get('/api/randoms/datos'),(req, res)=>{
+        res.send(`Server2-4 - PORT: ${port}`)
+    }
+    const connectedServer = httpServer.listen(port, () => {
       console.log(`Servidor http escuchando en el puerto ${connectedServer.address().port} - PID ${process.pid}`)
   })
   connectedServer.on('error', error => console.log(`Error en servidor ${error}`))
-  
+  }
+
 ////////////////////////////////////////////
 
 
@@ -95,7 +100,7 @@ async function escribir(){
 }
 
 //// SOCKET IO  ////////
-const io = new IOServer(connectedServer)
+
 io.on('connection', socket =>{
     console.log(`Se conectó un usuario ${socket.id}`) 
     io.emit('client:price:thumbnail', products)
@@ -112,5 +117,4 @@ io.on('connection', socket =>{
         io.emit('server:message', messages)
     })
 })
-
 
