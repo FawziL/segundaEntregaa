@@ -6,7 +6,7 @@
   "type": "commonjs",
   "scripts": {
     "test": "node benchmark.js",
-    "start": "0x server.js"
+    "start": "nodemon server.js"
   },
   "author": "Fawzi Lutfallah",
   "license": "ISC",

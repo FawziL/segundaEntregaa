@@ -61,8 +61,10 @@ const isAuth = require ('../middlewares/isAuth.js');
 const util = require("util");
 const compression = require ("compression");
 const logger = require ("../logger.js");
+const handleAll = require ("../middlewares/loggerMdw.js")
 
 module.exports = function(passport){
+routes.use(handleAll);
 
 routes.get('/', isAuth,(req,res)=>{
   res.sendFile(path.join(__dirname, ".././public/home.html"))
