@@ -4,6 +4,7 @@ const {Server: IOServer} = require('socket.io')
 const passport = require("passport")
 const initPassport = require( './passport/init.js')
 const rutas = require( "./routes/index.js")(passport);
+const routesApi = require( "./routes/routesApi.js");
 const path = require('path')
 const fs = require('fs')
 const mongoose = require( "mongoose")
@@ -59,7 +60,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 initPassport(passport);
 app.use("/", rutas);
-
+app.use('/api', routesApi)
 
 ////////////////////////////////////////////
 const products = []
