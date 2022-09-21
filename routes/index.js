@@ -1,70 +1,9 @@
 const { Router } = require('express')
-const productos = require('../api/productos')
 const routes = Router()
-//const contenedor = require('../api/productosDB')
-//const MariaDB = require('../MariaDB')
 const path = require('path')
-
-
-//const MariaDBApi = new contenedor(MariaDB, 'productos')
-
-//const {faker} = require("@faker-js/faker");
-
-
-/*
-/////////////////////
-routes.get('/api/productos', async function (req, res) {
-    res.json(await MariaDBApi.getAll())
-  })
-
-routes.get('/api/productos/:id', async function (req, res) {
-    res.json(await MariaDBApi.getById(req.params.id))
-  })
-
-routes.post('/api/productos', async function(req, res) {
-      res.json(await MariaDBApi.newProduct(req.body))
-  })
-
-
-routes.put('/api/productos/:id', async function (req, res) {
-      res.json(await MariaDBApi.update(req.body, req.params.id))
-  })
-
-
-routes.delete('/api/productos/:id', async function (req, res) {
-   res.json(await MariaDBApi.deleteById(req.params.id))
-  })
-//////////////
-
-
-
-
-routes.get('/api/productos-test', (req,res)=>{
-    
-  const response = [];
-
-  for (let i = 1; i <= 5; i++) {
-    response.push({
-      id: i,
-      title: faker.commerce.product(),
-      price: faker.commerce.price(),
-      thumbnail: faker.image.imageUrl(),
-    });
-  }
-  console.log(response)
-  res.json(response);
-})
-*/
-
-//const { fork } = require("child_process");
 const isAuth = require ('../middlewares/isAuth.js');
-const util = require("util");
-const compression = require ("compression");
-const logger = require ("../logger.js");
-const handleAll = require ("../middlewares/loggerMdw.js")
 
 module.exports = function(passport){
-routes.use(handleAll);
 
 routes.get('/', isAuth,(req,res)=>{
   res.sendFile(path.join(__dirname, ".././public/home.html"))
@@ -108,35 +47,6 @@ routes.get('/logout', isAuth,   function(req, res, next) {
         )
   })
 })
-/*routes.get("/api/randoms",(req, res) => { 
-  const forked = fork("child.js");
-  forked.send(req.query.cant ? Number(req.query.cant) : 100000000)
-  forked.on('message', (msg) => {
-  res.json(msg);
-  });
-});*/
-
-routes.get('/info',compression(), (req,res)=>{util
-  res.json(
-  `Titulo del proceso: ${process.title}
-  Sistema operativo: ${process.platform}
-  Version de Node: ${process.version}
-  Memoria total reservada: ${util.inspect(process.memoryUsage(), {
-    showHidden: false,
-    depth: null,
-    colors: true})}
-  Path de ejecución: ${util.inspect(process.execPath)}
-  Process id: ${process.pid}    
-  Carpeta del proyecto: ${process.cwd()}
-  Procesadores presentes: ${process.pid}`
-)});
-routes.get("*", (req, res) => {
-  const { url, method } = req;
-  logger.warn(`Ruta ${method} ${url} no implementada`);
-  res.send(`Ruta ${method} ${url} no está implementada`);
-});
-
-
 return routes;
 }
 

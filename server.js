@@ -4,7 +4,6 @@ const {Server: IOServer} = require('socket.io')
 const passport = require("passport")
 const initPassport = require( './passport/init.js')
 const rutas = require( "./routes/index.js")(passport);
-const routesApi = require( "./routes/routesApi.js");
 const path = require('path')
 const fs = require('fs')
 const mongoose = require( "mongoose")
@@ -12,7 +11,7 @@ require("dotenv").config()
 const config = require('./config/config')
 const mongo = config.mongodb
 const port = config.port
-//const logger = require ("./logger.js");
+
 
 
 app.use(express.json())
@@ -49,7 +48,6 @@ const serverExpress = app.listen(port, (error)=>{
     if(error){
         console.log(`Hubo un error: ${error}`)
     }else{
-        //logger.info(`Servidor http escuchando en el puerto ${serverExpress.address().port} - PID ${process.pid}`)
         console.log(`Servidor escuchando: ${port}`)
       }
 })
@@ -60,7 +58,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 initPassport(passport);
 app.use("/", rutas);
-app.use('/api', routesApi)
+
 
 ////////////////////////////////////////////
 const products = []

@@ -1,9 +1,7 @@
 const login =require( './login.js');
 const signup =require( './signup.js');
-const User = require ('../models/user.js');
 
 module.exports = function(passport){
-
     
     signup(passport);
     login(passport);
@@ -18,6 +16,4 @@ module.exports = function(passport){
     });
 
     // Llamando Passport Strategies para Login y SignUp/Registration
-    
-
 }
